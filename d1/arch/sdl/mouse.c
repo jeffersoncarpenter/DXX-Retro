@@ -134,12 +134,12 @@ void mouse_motion_handler(SDL_MouseMotionEvent *mme)
 		return;
 
 	Mouse.cursor_time = timer_query();
-	Mouse.x += mme->xrel;
-	Mouse.y += mme->yrel;
+	Mouse.x -= mme->xrel;
+	Mouse.y -= mme->yrel;
 	
 	event.type = EVENT_MOUSE_MOVED;
-	event.dx = mme->xrel;
-	event.dy = mme->yrel;
+	event.dx = -mme->xrel;
+	event.dy = -mme->yrel;
 	event.dz = 0;		// handled in mouse_button_handler
 	
 	Mouse.old_delta_x = event.dx;

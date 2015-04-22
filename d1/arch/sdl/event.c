@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <SDL/SDL_mouse.h>
 #include "event.h"
 #include "key.h"
 #include "mouse.h"
@@ -29,6 +30,7 @@ void event_poll()
 	int clean_uniframe=1;
 	window *wind = window_get_front();
 	int idle = 1;
+	int ignore_motion = 0;
 	
 	// If the front window changes, exit this loop, otherwise unintended behavior can occur
 	// like pressing 'Return' really fast at 'Difficulty Level' causing multiple games to be started
@@ -49,8 +51,13 @@ void event_poll()
 				idle = 0;
 				break;
 			case SDL_MOUSEMOTION:
-				mouse_motion_handler((SDL_MouseMotionEvent *)&event);
-				idle = 0;
+				if (ignore_motion == 0) {
+					mouse_motion_handler((SDL_MouseMotionEvent *)&event);
+					idle = 0;
+					SDL_WarpMouse(100, 100);
+					ignore_motion = 1;
+				}
+				ignore_motion = 0;
 				break;
 			case SDL_JOYBUTTONDOWN:
 			case SDL_JOYBUTTONUP:
